@@ -24,7 +24,7 @@ Create an **n8n workflow** that:
 **Input:**  
 ```json
 { "task": "Fix 500 error on user API" }
-
+```
 **AI Output:**  
 ```json
 { "category": "Backend", "priority": "High" }
