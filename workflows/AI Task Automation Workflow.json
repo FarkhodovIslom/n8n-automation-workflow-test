@@ -1,0 +1,129 @@
+{
+  "name": "AI Task Automation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a61ecf45-3eda-4181-b333-603571fb457d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        -80
+      ],
+      "id": "c4aa9214-2903-48e5-99ff-fd9e609c9378",
+      "name": "Webhook",
+      "webhookId": "a61ecf45-3eda-4181-b333-603571fb457d"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        240,
+        176
+      ],
+      "id": "f99db5c5-c7b5-4733-9102-4da18e273666",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Rnx8DJ2MBLTh0UXH",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the following task description in JSON:\n\n{{$json.body.task}}\n\nCategorize the task and assign a priority. The output should be a JSON object with 'category' and 'priority' fields.\n\nExample:\nInput: {\"task\": \"Fix 500 error on user API\"}\nOutput: {\"category\": \"Backend\", \"priority\": \"High\"}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "a31d26aa-f2e3-42f8-b4d1-710cab16ab02",
+      "name": "AI Agent",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "notes": "=Given the following task description in JSON:\n\n{{$.json}}\n\nCategorize the task and assign a priority. The output should be a JSON object with 'category' and 'priority' fields.\n\nExample:\nInput: {\"task\": \"Fix 500 error on user API\"}\nOutput: {\"category\": \"Backend\", \"priority\": \"High\"}"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "binaryPropertyName": "={{ $json.output }}",
+        "options": {
+          "fileName": "sample_output.json"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        -80
+      ],
+      "id": "bdfa655a-8fbb-4c3e-8338-dfc4a5906b07",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f1818829-5475-4326-b9e9-49c50cba298c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "31f2a3bb75f0e05f5e2f796cd0bbd4f441588f1b405419c6706caafaaeabb87b"
+  },
+  "id": "ApjmpvXzwFLicn59",
+  "tags": []
+}
