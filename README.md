@@ -1,4 +1,4 @@
-# 🤖 n8n AI Automation Workflow  
+# 🤖 n8n AI Automation Workflow V2 
 **Hansoft Team — Test Task**
 
 ## 🎯 Goal  
